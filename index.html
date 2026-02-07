@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For You ❤️</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+
   <style>
     * {
       box-sizing: border-box;
@@ -21,8 +26,10 @@
 
     /* ENVELOPE */
     .envelope {
-      width: 900px;
-      height: 600px;
+      width: 90vw;
+      max-width: 900px;
+      height: 60vw;
+      max-height: 600px;
       background: #c62828;
       position: relative;
       cursor: pointer;
@@ -38,9 +45,9 @@
       left: 0;
       width: 0;
       height: 0;
-      border-left: 450px solid transparent;
-      border-right: 450px solid transparent;
-      border-top: 300px solid #b71c1c;
+      border-left: 50% solid transparent;
+      border-right: 50% solid transparent;
+      border-top: 50% solid #b71c1c;
       pointer-events: none;
     }
 
@@ -50,8 +57,9 @@
       background: gold;
       border-radius: 50%;
       position: absolute;
-      top: 225px;
-      left: 375px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -66,10 +74,7 @@
     /* FLASH */
     .flash {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
       background: white;
       opacity: 0;
       pointer-events: none;
@@ -94,47 +99,42 @@
     }
 
     .question-container h1 {
-      font-size: 2.5rem;
+      font-size: clamp(2rem, 5vw, 3rem);
       color: #c62828;
     }
 
     .buttons {
-      position: relative;
-      width: 300px;
-      height: 150px;
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      justify-content: center;
     }
 
     button {
       padding: 15px 30px;
       font-size: 1.1rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
-      position: absolute;
     }
 
     #yes {
       background: #c62828;
       color: white;
-      left: 20px;
-      top: 50px;
+      position: relative;
     }
 
     #no {
       background: #555;
       color: white;
-      left: 160px;
-      top: 50px;
+      position: relative; /* start next to Yes */
     }
 
     /* VIDEO */
     .video-container {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
       background: white;
       align-items: center;
       justify-content: center;
@@ -147,7 +147,7 @@
 
     video {
       width: 90vw;
-      height: auto;
+      max-width: 1200px;
       max-height: 90vh;
     }
 
@@ -155,17 +155,15 @@
     .final-message {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
       align-items: center;
       justify-content: center;
       background: white;
-      font-size: 4rem;
+      font-size: clamp(3rem, 6vw, 5rem);
       color: #c62828;
       opacity: 0;
       transition: opacity 2s ease;
+      text-align: center;
     }
 
     .final-message.show {
@@ -228,14 +226,28 @@
     envelope.addEventListener('click', openEnvelope);
     seal.addEventListener('click', openEnvelope);
 
-    noBtn.addEventListener('mouseover', () => {
-      const parent = noBtn.parentElement;
-      const maxX = parent.clientWidth - noBtn.offsetWidth;
-      const maxY = parent.clientHeight - noBtn.offsetHeight;
+    function moveNoButton() {
+      // Take the button out of the normal layout the first time it runs
+      if (noBtn.style.position !== 'fixed') {
+        const rect = noBtn.getBoundingClientRect();
+        noBtn.style.position = 'fixed';
+        noBtn.style.left = rect.left + 'px';
+        noBtn.style.top = rect.top + 'px';
+      }
 
-      noBtn.style.left = Math.random() * maxX + 'px';
-      noBtn.style.top = Math.random() * maxY + 'px';
-    });
+      const padding = 20;
+      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+      const randomX = Math.random() * maxX;
+      const randomY = Math.random() * maxY;
+
+      noBtn.style.left = randomX + 'px';
+      noBtn.style.top = randomY + 'px';
+    }
+
+    noBtn.addEventListener('mouseover', moveNoButton);
+    noBtn.addEventListener('touchstart', moveNoButton);
 
     yesBtn.addEventListener('click', () => {
       question.style.display = 'none';
@@ -254,14 +266,11 @@
 
       setTimeout(() => {
         videoContainer.style.display = 'none';
-        finalMessage.style.display = 'flex';
-
-        requestAnimationFrame(() => {
-          finalMessage.classList.add('show');
-        });
+        finalMessage.classList.add('show');
       }, 1500);
     });
   </script>
 
 </body>
 </html>
+
