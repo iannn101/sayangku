@@ -128,6 +128,7 @@
       background: #555;
       color: white;
       position: relative; /* start next to Yes */
+      transition: left 0.15s ease-out, top 0.15s ease-out; /* fast slide instead of teleport */
     }
 
     /* VIDEO */
@@ -233,6 +234,7 @@
         noBtn.style.position = 'fixed';
         noBtn.style.left = rect.left + 'px';
         noBtn.style.top = rect.top + 'px';
+        noBtn.style.transition = 'left 0.15s ease-out, top 0.15s ease-out';
       }
 
       const padding = 20;
@@ -273,4 +275,3 @@
 
 </body>
 </html>
-
